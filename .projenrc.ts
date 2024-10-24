@@ -13,6 +13,7 @@ const project = new awscdk.AwsCdkConstructLibrary({
   vscode: true,
   deps: [
     "@aws-lambda-powertools/logger",
+    "@aws-sdk/client-sns",
   ] /* Runtime dependencies of this module. */,
   // description: undefined,  /* The description is just a string that helps people understand the purpose of the package. */
   devDeps: [
