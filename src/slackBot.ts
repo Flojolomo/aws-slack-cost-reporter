@@ -3,20 +3,20 @@ import * as events from "aws-cdk-lib/aws-events";
 import * as targets from "aws-cdk-lib/aws-events-targets";
 import * as iam from "aws-cdk-lib/aws-iam";
 import * as lambda from "aws-cdk-lib/aws-lambda";
-import * as lambdaNodeJs from "aws-cdk-lib/aws-lambda-nodejs";
 import * as logs from "aws-cdk-lib/aws-logs";
 import * as sns from "aws-cdk-lib/aws-sns";
 
 import { Construct } from "constructs";
-import path from "path";
+import { HandlerFunction } from "./lambda/ports/inbound/handler-function";
 
-interface CostNotificationSlackBotProps {
-  guardRailPolicies?: Array<iam.IManagedPolicy>;
-  notificationSchedule: events.Schedule;
-  slackChannelId: string;
-  slackWorkspaceId: string;
-  topic?: sns.ITopic;
+export interface CostNotificationSlackBotProps {
+  readonly guardRailPolicies?: Array<iam.IManagedPolicy>;
+  readonly notificationSchedule?: events.Schedule;
+  readonly slackChannelId: string;
+  readonly slackWorkspaceId: string;
+  readonly topic?: sns.ITopic;
 }
+
 export class CostNotificationSlackBot extends Construct {
   private static readonly defaultNotificationSchedule = events.Schedule.cron({
     minute: "0",
@@ -64,20 +64,31 @@ export class CostNotificationSlackBot extends Construct {
   }
 
   private readCostExplorerDataHandler(topic: sns.ITopic): lambda.IFunction {
-    const currentForecastProcessor = new lambdaNodeJs.NodejsFunction(
+    const currentForecastProcessor = new HandlerFunction(
       this,
       "ReadCostExplorerDataHandler",
       {
-        entry: path.join(
-          __dirname,
-          "lambda/ports/inbound/generate-current-month-forecast-handler.ts",
-        ),
         environment: {
           TOPIC_ARN: topic.topicArn,
         },
         logRetention: logs.RetentionDays.ONE_WEEK,
       },
     );
+
+    // new lambdaNodeJs.NodejsFunction(
+    //   this,
+    //   "ReadCostExplorerDataHandler",
+    //   {
+    //     entry: path.join(
+    //       __dirname,
+    //       "lambda/ports/inbound/generate-current-month-forecast-handler.js",
+    //     ),
+    //     environment: {
+    //       TOPIC_ARN: topic.topicArn,
+    //     },
+    //     logRetention: logs.RetentionDays.ONE_WEEK,
+    //   },
+    // );
 
     new iam.ManagedPolicy(this, "ReadCostExplorerPolicy", {
       roles: [currentForecastProcessor.role!],

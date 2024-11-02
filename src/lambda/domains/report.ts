@@ -16,7 +16,7 @@ export class Report {
   private forecast: {
     currentSpending: number;
     forecast: number;
-  };
+  } = { currentSpending: 0, forecast: 0 };
 
   public constructor(
     private readonly from: Date,

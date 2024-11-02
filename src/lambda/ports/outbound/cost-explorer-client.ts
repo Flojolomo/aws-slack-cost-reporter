@@ -1,10 +1,11 @@
+// eslint-disable-next-line import/no-extraneous-dependencies
 import {
   CostExplorerClient,
   GetCostAndUsageCommand,
   GetCostForecastCommand,
 } from "@aws-sdk/client-cost-explorer";
-import { PaymentClient } from "../../domains/report";
 import { Logger } from "@aws-lambda-powertools/logger";
+import { PaymentClient } from "../../domains/report";
 
 const costExplorer = new CostExplorerClient({});
 

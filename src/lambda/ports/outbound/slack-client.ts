@@ -1,6 +1,6 @@
 import { PublishCommand, SNSClient } from "@aws-sdk/client-sns";
-import { NotificationClient } from "../../domains/report";
 import { Logger } from "@aws-lambda-powertools/logger";
+import { NotificationClient } from "../../domains/report";
 
 const snsClient = new SNSClient({});
 
