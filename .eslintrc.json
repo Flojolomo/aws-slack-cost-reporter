@@ -53,6 +53,7 @@
         "devDependencies": [
           "**/test/**",
           "**/build-tools/**",
+          "src/lambda/ports/inbound/handler.lambda.ts",
           ".projenrc.ts",
           "projenrc/**/*.ts"
         ],

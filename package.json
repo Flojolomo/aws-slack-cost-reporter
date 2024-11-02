@@ -1,5 +1,5 @@
 {
-  "name": "aws-slack-cost-notification-bot",
+  "name": "aws-slack-cost-reporter",
   "repository": {
     "type": "git",
     "url": "https://github.com/florian1siegel/aws-slack-cost-notification-bot.git"
@@ -7,6 +7,9 @@
   "scripts": {
     "build": "npx projen build",
     "bump": "npx projen bump",
+    "bundle": "npx projen bundle",
+    "bundle:lambda/ports/inbound/handler.lambda": "npx projen bundle:lambda/ports/inbound/handler.lambda",
+    "bundle:lambda/ports/inbound/handler.lambda:watch": "npx projen bundle:lambda/ports/inbound/handler.lambda:watch",
     "clobber": "npx projen clobber",
     "compat": "npx projen compat",
     "compile": "npx projen compile",
@@ -39,10 +42,11 @@
     "@types/node": "^22.7.9",
     "@typescript-eslint/eslint-plugin": "^7",
     "@typescript-eslint/parser": "^7",
+    "aws-cdk": "^2.164.0",
     "aws-cdk-lib": "2.164.0",
-    "aws-lambda": "^1.0.7",
     "commit-and-tag-version": "^12",
     "constructs": "10.0.5",
+    "esbuild": "^0.24.0",
     "eslint": "^8",
     "eslint-config-prettier": "^9.1.0",
     "eslint-import-resolver-typescript": "^3.6.3",
@@ -66,8 +70,17 @@
     "constructs": "^10.0.5"
   },
   "dependencies": {
-    "@aws-lambda-powertools/logger": "^2.10.0"
+    "@aws-lambda-powertools/logger": "^2.10.0",
+    "@aws-sdk/client-cost-explorer": "^3.682.0",
+    "@aws-sdk/client-sns": "^3.679.0",
+    "aws-lambda": "^1.0.7"
   },
+  "bundledDependencies": [
+    "@aws-lambda-powertools/logger",
+    "@aws-sdk/client-cost-explorer",
+    "@aws-sdk/client-sns",
+    "aws-lambda"
+  ],
   "keywords": [
     "cdk"
   ],

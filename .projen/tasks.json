@@ -42,6 +42,33 @@
       ],
       "condition": "git log --oneline -1 | grep -qv \"chore(release):\""
     },
+    "bundle": {
+      "name": "bundle",
+      "description": "Prepare assets",
+      "steps": [
+        {
+          "spawn": "bundle:lambda/ports/inbound/handler.lambda"
+        }
+      ]
+    },
+    "bundle:lambda/ports/inbound/handler.lambda": {
+      "name": "bundle:lambda/ports/inbound/handler.lambda",
+      "description": "Create a JavaScript bundle from src/lambda/ports/inbound/handler.lambda.ts",
+      "steps": [
+        {
+          "exec": "esbuild --bundle src/lambda/ports/inbound/handler.lambda.ts --target=\"node18\" --platform=\"node\" --outfile=\"assets/lambda/ports/inbound/handler.lambda/index.js\" --tsconfig=\"tsconfig.dev.json\" --external:@aws-sdk/*"
+        }
+      ]
+    },
+    "bundle:lambda/ports/inbound/handler.lambda:watch": {
+      "name": "bundle:lambda/ports/inbound/handler.lambda:watch",
+      "description": "Continuously update the JavaScript bundle from src/lambda/ports/inbound/handler.lambda.ts",
+      "steps": [
+        {
+          "exec": "esbuild --bundle src/lambda/ports/inbound/handler.lambda.ts --target=\"node18\" --platform=\"node\" --outfile=\"assets/lambda/ports/inbound/handler.lambda/index.js\" --tsconfig=\"tsconfig.dev.json\" --external:@aws-sdk/* --watch"
+        }
+      ]
+    },
     "clobber": {
       "name": "clobber",
       "description": "hard resets to HEAD of origin and cleans the local repo",
@@ -197,7 +224,12 @@
     },
     "pre-compile": {
       "name": "pre-compile",
-      "description": "Prepare the project for compilation"
+      "description": "Prepare the project for compilation",
+      "steps": [
+        {
+          "spawn": "bundle"
+        }
+      ]
     },
     "release": {
       "name": "release",
@@ -270,13 +302,13 @@
       },
       "steps": [
         {
-          "exec": "npx npm-check-updates@16 --upgrade --target=minor --peer --dep=dev,peer,prod,optional --filter=@types/aws-lambda,@types/jest,@types/node,aws-lambda,eslint-config-prettier,eslint-import-resolver-typescript,eslint-plugin-import,eslint-plugin-prettier,jest,jsii-diff,jsii-pacmak,prettier,projen,ts-jest,ts-node,typescript,@aws-lambda-powertools/logger"
+          "exec": "npx npm-check-updates@16 --upgrade --target=minor --peer --dep=dev,peer,prod,optional --filter=@types/aws-lambda,@types/jest,@types/node,aws-cdk,esbuild,eslint-config-prettier,eslint-import-resolver-typescript,eslint-plugin-import,eslint-plugin-prettier,jest,jsii-diff,jsii-pacmak,prettier,projen,ts-jest,ts-node,typescript,@aws-lambda-powertools/logger,@aws-sdk/client-cost-explorer,@aws-sdk/client-sns,aws-lambda"
         },
         {
           "exec": "yarn install --check-files"
         },
         {
-          "exec": "yarn upgrade @types/aws-lambda @types/jest @types/node @typescript-eslint/eslint-plugin @typescript-eslint/parser aws-lambda commit-and-tag-version eslint-config-prettier eslint-import-resolver-typescript eslint-plugin-import eslint-plugin-prettier eslint jest jest-junit jsii-diff jsii-docgen jsii-pacmak jsii-rosetta jsii prettier projen ts-jest ts-node typescript aws-cdk-lib constructs @aws-lambda-powertools/logger"
+          "exec": "yarn upgrade @types/aws-lambda @types/jest @types/node @typescript-eslint/eslint-plugin @typescript-eslint/parser aws-cdk commit-and-tag-version esbuild eslint-config-prettier eslint-import-resolver-typescript eslint-plugin-import eslint-plugin-prettier eslint jest jest-junit jsii-diff jsii-docgen jsii-pacmak jsii-rosetta jsii prettier projen ts-jest ts-node typescript @aws-lambda-powertools/logger @aws-sdk/client-cost-explorer @aws-sdk/client-sns aws-lambda aws-cdk-lib constructs"
         },
         {
           "exec": "npx projen"

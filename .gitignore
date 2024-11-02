@@ -51,6 +51,8 @@ junit.xml
 .jsii
 tsconfig.json
 !/API.md
+/assets/
+!/src/lambda/ports/inbound/handler-function.ts
 !/.vscode/extensions.json
 !/.vscode/settings.json
 !/.projenrc.ts
