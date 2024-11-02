@@ -1,5 +1,5 @@
 {
-  "name": "aws-slack-cost-notification-bot",
+  "name": "aws-slack-cost-reporter",
   "repository": {
     "type": "git",
     "url": "https://github.com/florian1siegel/aws-slack-cost-notification-bot.git"

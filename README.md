@@ -1,4 +1,14 @@
-# Cost notification slack bot
-Have you ever had some VPC & NAT gateway running over the weekend? Or multipe EC2 instance running for a couple of day? If the answer is yes, or you fear that this might be an issue for you, this module might be interesting for you.
+# AWS Slack Cost Reporter
 
-I have experienced that myself even with budget alerts in place. The downside was, that I was already over budget before running the experiement. So no alert was triggered with an increasing bill.
+Keeping an eye on budgets is crucial when working in the cloud. Otherwise, the bill might be a big surprise. Of course, configuring budgets is one way to cover this, but I decided to get notified on a regular basis with the amount of the current bill & the current forecast.
+
+To use this construct exposed of this module, integrate the following code snippet in your stack.
+
+```typescript
+const stack: cdk.Stack;
+
+new SlackCostReporter(stack, "SlackCostReporter", {
+  slackChannelId: "***",
+  slackWorkspaceId: "***",
+});
+```

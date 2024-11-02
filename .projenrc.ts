@@ -6,7 +6,7 @@ const project = new awscdk.AwsCdkConstructLibrary({
   cdkVersion: "2.164.0",
   defaultReleaseBranch: "main",
   jsiiVersion: "~5.5.0",
-  name: "aws-slack-cost-notification-bot",
+  name: "aws-slack-cost-reporter",
   projenrcTs: true,
   repositoryUrl:
     "https://github.com/florian1siegel/aws-slack-cost-notification-bot.git",
