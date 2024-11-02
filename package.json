@@ -2,7 +2,7 @@
   "name": "aws-slack-cost-reporter",
   "repository": {
     "type": "git",
-    "url": "https://github.com/florian1siegel/aws-slack-cost-reporter.git"
+    "url": "https://github.com/Flojolomo/aws-slack-cost-reporter.git"
   },
   "scripts": {
     "build": "npx projen build",
