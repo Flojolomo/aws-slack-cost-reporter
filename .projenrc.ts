@@ -9,7 +9,7 @@ const project = new awscdk.AwsCdkConstructLibrary({
   name: "aws-slack-cost-reporter",
   projenrcTs: true,
   repositoryUrl:
-    "https://github.com/florian1siegel/aws-slack-cost-notification-bot.git",
+    "https://github.com/florian1siegel/aws-slack-cost-reporter.git",
   prettier: true,
   vscode: true,
   deps: [] /* Runtime dependencies of this module. */,
