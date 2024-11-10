@@ -121,21 +121,6 @@ export class SlackCostReporter extends Construct {
       },
     );
 
-    // new lambdaNodeJs.NodejsFunction(
-    //   this,
-    //   "ReadCostExplorerDataHandler",
-    //   {
-    //     entry: path.join(
-    //       __dirname,
-    //       "lambda/ports/inbound/generate-current-month-forecast-handler.js",
-    //     ),
-    //     environment: {
-    //       TOPIC_ARN: topic.topicArn,
-    //     },
-    //     logRetention: logs.RetentionDays.ONE_WEEK,
-    //   },
-    // );
-
     new iam.ManagedPolicy(this, "ReadCostExplorerPolicy", {
       roles: [currentForecastProcessor.role!],
       statements: [
