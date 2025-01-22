@@ -20,6 +20,11 @@ export interface SlackCostReporterProps {
    */
   readonly guardRailPolicies?: Array<iam.IManagedPolicy>;
   /**
+   * Identifier of the organization. This value, if defined, is used as
+   * prefix of the message title send to slack.
+   */
+  readonly organizationIdentifier?: string;
+  /**
    * Schedule  or rate at which cost reports are generated and sent to the slack
    * channel. If not set the report is creates every day at 8 AM UTC.
    * @default None
@@ -79,7 +84,10 @@ export class SlackCostReporter extends Construct {
     const chatbotTopic = props.topic ?? new sns.Topic(this, "ChatbotTopic");
     slackChannelConfiguration.addNotificationTopic(chatbotTopic);
 
-    const reportGenerator = this.reportGeneratorFunction(chatbotTopic);
+    const reportGenerator = this.reportGeneratorFunction(
+      chatbotTopic,
+      props.organizationIdentifier,
+    );
     this.schedule(
       props.schedule ?? SlackCostReporter.defaultNotificationSchedule,
       reportGenerator,
@@ -109,7 +117,10 @@ export class SlackCostReporter extends Construct {
     });
   }
 
-  private reportGeneratorFunction(topic: sns.ITopic): lambda.IFunction {
+  private reportGeneratorFunction(
+    topic: sns.ITopic,
+    organizationIdentifier: string | undefined,
+  ): lambda.IFunction {
     const currentForecastProcessor = new HandlerFunction(
       this,
       "ReadCostExplorerDataHandler",
@@ -120,6 +131,13 @@ export class SlackCostReporter extends Construct {
         logRetention: logs.RetentionDays.ONE_WEEK,
       },
     );
+
+    if (organizationIdentifier) {
+      currentForecastProcessor.addEnvironment(
+        "ORGANIZATION_IDENTIFIER",
+        organizationIdentifier,
+      );
+    }
 
     new iam.ManagedPolicy(this, "ReadCostExplorerPolicy", {
       roles: [currentForecastProcessor.role!],

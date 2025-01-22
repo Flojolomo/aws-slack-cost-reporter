@@ -5,7 +5,7 @@ import {
   GetCostForecastCommand,
 } from "@aws-sdk/client-cost-explorer";
 import { Logger } from "@aws-lambda-powertools/logger";
-import { PaymentClient } from "../../domains/report";
+import { IPaymentClient } from "../../domains/report";
 
 const costExplorer = new CostExplorerClient({});
 
@@ -40,27 +40,33 @@ const getCurrentSpending = async (from: Date, to: Date): Promise<number> => {
   return toNumber(amount);
 };
 
-const getForecast = async (to: Date): Promise<number> => {
+const getForecast = async (to: Date): Promise<number | undefined> => {
   const today = new Date();
   logger.info(`Requesting forecast from ${today} to ${to}`);
-  const forecast = await costExplorer.send(
-    new GetCostForecastCommand({
-      Granularity: "MONTHLY",
-      Metric: "UNBLENDED_COST",
-      TimePeriod: {
-        Start: today.toISOString().split("T")[0],
-        End: to.toISOString().split("T")[0],
-      },
-    }),
-  );
 
-  const amount = forecast.Total?.Amount;
-  logger.info(`Got forecast ${amount}`);
+  try {
+    const forecast = await costExplorer.send(
+      new GetCostForecastCommand({
+        Granularity: "MONTHLY",
+        Metric: "UNBLENDED_COST",
+        TimePeriod: {
+          Start: today.toISOString().split("T")[0],
+          End: to.toISOString().split("T")[0],
+        },
+      }),
+    );
 
-  return toNumber(amount);
+    const amount = forecast.Total?.Amount;
+    logger.info(`Got forecast ${amount}`);
+
+    return toNumber(amount);
+  } catch (error: unknown) {
+    logger.error(`Failed to determine forecast: ${error}`);
+    return;
+  }
 };
 
-export const costExplorerClient: PaymentClient = {
+export const costExplorerClient: IPaymentClient = {
   getCurrentSpending,
   getForecast,
 };

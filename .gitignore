@@ -55,4 +55,5 @@ tsconfig.json
 !/src/lambda/ports/inbound/handler-function.ts
 !/.vscode/extensions.json
 !/.vscode/settings.json
+cdk.out
 !/.projenrc.ts

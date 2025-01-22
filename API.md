@@ -130,6 +130,7 @@ const slackCostReporterProps: SlackCostReporterProps = { ... }
 | <code><a href="#aws-slack-cost-reporter.SlackCostReporterProps.property.slackChannelId">slackChannelId</a></code> | <code>string</code> | Channel ID of the slack channel to send the reports. |
 | <code><a href="#aws-slack-cost-reporter.SlackCostReporterProps.property.slackWorkspaceId">slackWorkspaceId</a></code> | <code>string</code> | ID of the slack workspace. |
 | <code><a href="#aws-slack-cost-reporter.SlackCostReporterProps.property.guardRailPolicies">guardRailPolicies</a></code> | <code>aws-cdk-lib.aws_iam.IManagedPolicy[]</code> | Guardrails applied to the permissions of the chatbot. |
+| <code><a href="#aws-slack-cost-reporter.SlackCostReporterProps.property.organizationIdentifier">organizationIdentifier</a></code> | <code>string</code> | Identifier of the organization. |
 | <code><a href="#aws-slack-cost-reporter.SlackCostReporterProps.property.schedule">schedule</a></code> | <code>aws-cdk-lib.aws_events.Schedule</code> | Schedule  or rate at which cost reports are generated and sent to the slack channel. |
 | <code><a href="#aws-slack-cost-reporter.SlackCostReporterProps.property.topic">topic</a></code> | <code>aws-cdk-lib.aws_sns.ITopic</code> | Topic used as to notify the slack bot. |
 
@@ -175,6 +176,21 @@ Guardrails applied to the permissions of the chatbot.
 
 If not set
 the chatbot has no permission for any operation.
+
+---
+
+##### `organizationIdentifier`<sup>Optional</sup> <a name="organizationIdentifier" id="aws-slack-cost-reporter.SlackCostReporterProps.property.organizationIdentifier"></a>
+
+```typescript
+public readonly organizationIdentifier: string;
+```
+
+- *Type:* string
+
+Identifier of the organization.
+
+This value, if defined, is used as
+prefix of the message title send to slack.
 
 ---
 

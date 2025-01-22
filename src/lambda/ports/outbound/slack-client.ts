@@ -1,6 +1,6 @@
 import { PublishCommand, SNSClient } from "@aws-sdk/client-sns";
 import { Logger } from "@aws-lambda-powertools/logger";
-import { NotificationClient } from "../../domains/report";
+import { INotificationClient } from "../../domains/report";
 
 const snsClient = new SNSClient({});
 
@@ -8,13 +8,13 @@ const logger = new Logger({ serviceName: "slack-client" });
 
 const notify = (topicArn: string) => {
   return async ({
-    from,
-    to,
+    title,
+    message,
     currentSpending,
     forecast,
   }: {
-    from: Date;
-    to: Date;
+    title: string;
+    message: string;
     currentSpending: number;
     forecast: number;
   }): Promise<void> => {
@@ -26,9 +26,9 @@ const notify = (topicArn: string) => {
           source: "custom",
           content: {
             textType: "client-markdown",
-            title: "Current Cost and Forecast",
+            title,
             description: `
-                    :warning: Cost estimate from ${from} to ${to}
+                    :warning: ${message}
                     * *Current Cost* ${currentSpending}
                     * *Forecast* ${forecast}`,
           },
@@ -44,6 +44,6 @@ export const slackClient = ({
   topicArn,
 }: {
   topicArn: string;
-}): NotificationClient => ({
+}): INotificationClient => ({
   notify: notify(topicArn),
 });

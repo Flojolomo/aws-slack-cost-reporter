@@ -10,5 +10,8 @@ export const handler: EventBridgeHandler<string, unknown, unknown> = async (
   logger.addContext(context);
   logger.logEventIfEnabled(event);
 
-  await generateCurrentMonthForecastUseCase(process.env.TOPIC_ARN!);
+  await generateCurrentMonthForecastUseCase(
+    process.env.TOPIC_ARN!,
+    process.env.ORGANIZATION_IDENTIFIER,
+  );
 };

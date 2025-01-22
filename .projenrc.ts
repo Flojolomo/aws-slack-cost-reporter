@@ -41,4 +41,8 @@ project.eslint?.addRules({
   "sort-imports": ["off"],
   "import/order": "error",
 });
+
+project.tsconfigDev.addInclude("examples/*.ts");
+project.addGitIgnore("cdk.out");
+
 project.synth();
