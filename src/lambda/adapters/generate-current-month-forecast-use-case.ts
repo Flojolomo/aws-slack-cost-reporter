@@ -8,13 +8,13 @@ export const generateCurrentMonthForecastUseCase = async (topicArn: string) => {
   const startDate = new Date(today.getFullYear(), today.getMonth(), 1);
   const endDate = new Date(today.getFullYear(), today.getMonth() + 1, 0);
 
-  const forecast = new Report(
+  const report = new Report(
     startDate,
     endDate,
     slackClient({ topicArn }),
     costExplorerClient,
   );
 
-  await forecast.generate();
-  await forecast.send();
+  await report.generate();
+  await report.send();
 };
