@@ -142,10 +142,10 @@ describe("unit: report", () => {
         expect.objectContaining({
           description: expect.stringContaining(
             `
-| Service | Spending (USD) |
-|:---|:---|
-| S3 | 14 |
-| CodeBuild | 2 |`,
+|  Service    |  Spending (USD)  |
+|-----------|----------------|
+| S3         | 14.00           |
+| CodeBuild  | 2.00            |`,
           ),
         }),
       );

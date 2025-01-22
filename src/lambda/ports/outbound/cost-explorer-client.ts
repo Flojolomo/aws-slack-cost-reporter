@@ -11,15 +11,10 @@ const costExplorer = new CostExplorerClient({});
 
 const logger = new Logger({ serviceName: "cost-explorer-client" });
 
-const toNumber = (amount: string | undefined): number => {
-  if (!amount) {
-    return 0;
-  }
-
-  return Number((Math.round(Number(amount) * 100) / 100).toFixed(2));
-};
-
-const getCurrentSpending = async (from: Date, to: Date): Promise<number> => {
+const getCurrentSpending = async (
+  from: Date,
+  to: Date,
+): Promise<number | undefined> => {
   logger.info(`Requesting current cost from ${from} to ${to}`);
   const currentCostAndUsage = await costExplorer.send(
     new GetCostAndUsageCommand({
@@ -37,7 +32,7 @@ const getCurrentSpending = async (from: Date, to: Date): Promise<number> => {
     currentCostAndUsage.ResultsByTime?.[0]?.Total?.UnblendedCost?.Amount;
   logger.info(`Got current cost ${amount}`);
 
-  return toNumber(amount);
+  return Number(amount);
 };
 
 const getForecast = async (to: Date): Promise<number | undefined> => {
@@ -59,7 +54,7 @@ const getForecast = async (to: Date): Promise<number | undefined> => {
     const amount = forecast.Total?.Amount;
     logger.info(`Got forecast ${amount}`);
 
-    return toNumber(amount);
+    return Number(amount);
   } catch (error: unknown) {
     logger.error(`Failed to determine forecast: ${error}`);
     return;
@@ -93,7 +88,7 @@ const getSpendingByService = async (
 
   const costByService = currentCostAndUsage.ResultsByTime?.[0]?.Groups?.map(
     (service): ISpendingByService => ({
-      amount: service.Metrics?.UnblendedCost?.Amount ?? "-1",
+      amount: Number(service.Metrics?.UnblendedCost?.Amount),
       service: service.Keys?.join(" ") ?? "unknown",
     }),
   );

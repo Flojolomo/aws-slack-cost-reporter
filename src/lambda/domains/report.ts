@@ -9,11 +9,11 @@ export interface INotificationClient {
 
 export interface ISpendingByService {
   service: string;
-  amount: string;
+  amount: number;
 }
 
 export interface IPaymentClient {
-  getCurrentSpending(from: Date, to: Date): Promise<number>;
+  getCurrentSpending(from: Date, to: Date): Promise<number | undefined>;
   getForecast(to: Date): Promise<number | undefined>;
   getSpendingByService(
     from: Date,
@@ -61,28 +61,44 @@ export class Report {
 
     const lines = [
       `\n:warning: Cost estimate from ${this.from} to ${this.to}`,
-      `*Current Cost* ${currentSpending}`,
-      `*Forecast* ${forecast}`,
+      `*Current Cost* ${this.formatNumber(currentSpending)}`,
+      `*Forecast* ${this.formatNumber(forecast)}`,
     ];
 
     if (this.enableServiceLevelReports) {
-      const spendingByServices = await this.paymentClient.getSpendingByService(
-        this.from,
-        this.to,
-      );
-
-      lines.push(
-        "\n| Service | Spending (USD) |",
-        "|:---|:---|",
-        ...spendingByServices.map(
-          ({ service, amount }) => `| ${service} | ${amount} |`,
-        ),
-      );
+      lines.push(...(await this.buildServiceReport()));
     }
 
     await this.notificationClient.notify({
       title,
       description: lines.join("\n"),
     });
+  }
+
+  private async buildServiceReport(): Promise<Array<string>> {
+    const spendingByServices = await this.paymentClient.getSpendingByService(
+      this.from,
+      this.to,
+    );
+
+    const serviceTitle = "Service";
+    const spendingTitle = "Spending (USD)";
+
+    const header = `\n${spendingTitle} ${serviceTitle}`;
+
+    return [
+      header,
+      ...spendingByServices.map(
+        ({ service, amount }) => `${amount} ${service}`,
+      ),
+    ];
+  }
+
+  private formatNumber(amount: number | undefined): string {
+    if (!amount || Number.isNaN(amount)) {
+      return "-1";
+    }
+
+    return String((Math.round(Number(amount) * 100) / 100).toFixed(2));
   }
 }
