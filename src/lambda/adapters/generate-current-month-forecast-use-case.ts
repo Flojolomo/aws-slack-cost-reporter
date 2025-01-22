@@ -16,6 +16,7 @@ export const generateCurrentMonthForecastUseCase = async (
     to: endDate,
     notificationClient: slackClient({ topicArn }),
     paymentClient: costExplorerClient,
+    organizationIdentifier,
   });
 
   await report.send();

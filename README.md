@@ -38,6 +38,25 @@ new SlackCostReporter(stack, "SlackCostReporter", {
 });
 ```
 
+## Development
+
 ## Further Reading
 
 - [AWS Admin Guide: Slack Setup](https://docs.aws.amazon.com/chatbot/latest/adminguide/slack-setup.html)
+
+Be authenticated
+
+Ensure bootstrapping
+
+yarn build
+yarn cdk deploy \
+--parameters SlackWorkspaceId=<> \
+ --parameters SlackChannelId=<> \
+ --app "npx ts-node examples/example-stack.ts"
+
+For updates
+yarn build
+
+Will keep the
+yarn cdk deploy \
+--app "npx ts-node examples/example-stack.ts"
