@@ -18,17 +18,17 @@ describe("unit: report", () => {
       getCurrentSpendingMock.mockResolvedValueOnce(currentSpending);
       getForecastMock.mockResolvedValueOnce(forecast);
 
-      const report = new Report(
+      const report = new Report({
         from,
         to,
-        {
+        notificationClient: {
           notify: notifyMock,
         },
-        {
+        paymentClient: {
           getCurrentSpending: getCurrentSpendingMock,
           getForecast: getForecastMock,
         },
-      );
+      });
 
       await report.send();
     });

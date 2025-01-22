@@ -13,17 +13,26 @@ export interface PaymentClient {
 }
 
 export class Report {
+  private readonly from: Date;
+  private readonly to: Date;
+  private readonly notificationClient: NotificationClient;
+  private readonly paymentClient: PaymentClient;
   private forecast: {
     currentSpending: number;
     forecast: number;
   } = { currentSpending: 0, forecast: 0 };
 
-  public constructor(
-    private readonly from: Date,
-    private readonly to: Date,
-    private readonly notificationClient: NotificationClient,
-    private readonly paymentClient: PaymentClient,
-  ) {}
+  public constructor(props: {
+    readonly from: Date;
+    readonly to: Date;
+    readonly notificationClient: NotificationClient;
+    readonly paymentClient: PaymentClient;
+  }) {
+    this.from = props.from;
+    this.to = props.to;
+    this.notificationClient = props.notificationClient;
+    this.paymentClient = props.paymentClient;
+  }
 
   public async send(): Promise<void> {
     await this.generate();
@@ -42,7 +51,5 @@ export class Report {
       ),
       forecast: await this.paymentClient.getForecast(this.to),
     };
-
-    await this.send();
   }
 }

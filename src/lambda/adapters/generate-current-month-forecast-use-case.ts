@@ -11,13 +11,12 @@ export const generateCurrentMonthForecastUseCase = async (
   const startDate = new Date(today.getFullYear(), today.getMonth(), 1);
   const endDate = new Date(today.getFullYear(), today.getMonth() + 1, 0);
 
-  const report = new Report(
-    startDate,
-    endDate,
-    slackClient({ topicArn }),
-    costExplorerClient,
-    organizationIdentifier,
-  );
+  const report = new Report({
+    from: startDate,
+    to: endDate,
+    notificationClient: slackClient({ topicArn }),
+    paymentClient: costExplorerClient,
+  });
 
   await report.send();
 };
