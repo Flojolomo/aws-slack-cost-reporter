@@ -129,6 +129,7 @@ const slackCostReporterProps: SlackCostReporterProps = { ... }
 | --- | --- | --- |
 | <code><a href="#aws-slack-cost-reporter.SlackCostReporterProps.property.slackChannelId">slackChannelId</a></code> | <code>string</code> | Channel ID of the slack channel to send the reports. |
 | <code><a href="#aws-slack-cost-reporter.SlackCostReporterProps.property.slackWorkspaceId">slackWorkspaceId</a></code> | <code>string</code> | ID of the slack workspace. |
+| <code><a href="#aws-slack-cost-reporter.SlackCostReporterProps.property.enableServiceLevelReports">enableServiceLevelReports</a></code> | <code>boolean</code> | Feature toggle to enable spending reports on service level. |
 | <code><a href="#aws-slack-cost-reporter.SlackCostReporterProps.property.guardRailPolicies">guardRailPolicies</a></code> | <code>aws-cdk-lib.aws_iam.IManagedPolicy[]</code> | Guardrails applied to the permissions of the chatbot. |
 | <code><a href="#aws-slack-cost-reporter.SlackCostReporterProps.property.organizationIdentifier">organizationIdentifier</a></code> | <code>string</code> | Identifier of the organization. |
 | <code><a href="#aws-slack-cost-reporter.SlackCostReporterProps.property.schedule">schedule</a></code> | <code>aws-cdk-lib.aws_events.Schedule</code> | Schedule  or rate at which cost reports are generated and sent to the slack channel. |
@@ -160,6 +161,19 @@ ID of the slack workspace.
 
 It is crucial, that a client
 is set up & authenticated for this ID.
+
+---
+
+##### `enableServiceLevelReports`<sup>Optional</sup> <a name="enableServiceLevelReports" id="aws-slack-cost-reporter.SlackCostReporterProps.property.enableServiceLevelReports"></a>
+
+```typescript
+public readonly enableServiceLevelReports: boolean;
+```
+
+- *Type:* boolean
+- *Default:* false
+
+Feature toggle to enable spending reports on service level.
 
 ---
 

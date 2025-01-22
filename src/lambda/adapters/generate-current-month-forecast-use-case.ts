@@ -5,6 +5,7 @@ import { slackClient } from "../ports/outbound/slack-client";
 export const generateCurrentMonthForecastUseCase = async (
   topicArn: string,
   organizationIdentifier: string | undefined,
+  enableServiceLevelReports: string | undefined,
 ) => {
   const today = new Date();
 
@@ -14,6 +15,10 @@ export const generateCurrentMonthForecastUseCase = async (
   const report = new Report({
     from: startDate,
     to: endDate,
+    enableServiceLevelReports:
+      enableServiceLevelReports === undefined
+        ? false
+        : Boolean(enableServiceLevelReports),
     notificationClient: slackClient({ topicArn }),
     paymentClient: costExplorerClient,
     organizationIdentifier,

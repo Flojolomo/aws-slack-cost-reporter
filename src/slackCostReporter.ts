@@ -14,6 +14,11 @@ import { HandlerFunction } from "./lambda/ports/inbound/handler-function";
  */
 export interface SlackCostReporterProps {
   /**
+   * Feature toggle to enable spending reports on service level.
+   * @default false
+   */
+  readonly enableServiceLevelReports?: boolean;
+  /**
    * Guardrails applied to the permissions of the chatbot. If not set
    * the chatbot has no permission for any operation.
    * @default None
@@ -87,6 +92,7 @@ export class SlackCostReporter extends Construct {
     const reportGenerator = this.reportGeneratorFunction(
       chatbotTopic,
       props.organizationIdentifier,
+      props.enableServiceLevelReports,
     );
     this.schedule(
       props.schedule ?? SlackCostReporter.defaultNotificationSchedule,
@@ -120,6 +126,7 @@ export class SlackCostReporter extends Construct {
   private reportGeneratorFunction(
     topic: sns.ITopic,
     organizationIdentifier: string | undefined,
+    enableServiceLevelReports: boolean | undefined,
   ): lambda.IFunction {
     const currentForecastProcessor = new HandlerFunction(
       this,
@@ -136,6 +143,13 @@ export class SlackCostReporter extends Construct {
       currentForecastProcessor.addEnvironment(
         "ORGANIZATION_IDENTIFIER",
         organizationIdentifier,
+      );
+    }
+
+    if (enableServiceLevelReports) {
+      currentForecastProcessor.addEnvironment(
+        "ENABLE_SERVICE_LEVEL_REPORTS",
+        String(enableServiceLevelReports),
       );
     }
 

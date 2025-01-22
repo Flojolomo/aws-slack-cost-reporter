@@ -5,7 +5,7 @@ import {
   GetCostForecastCommand,
 } from "@aws-sdk/client-cost-explorer";
 import { Logger } from "@aws-lambda-powertools/logger";
-import { IPaymentClient } from "../../domains/report";
+import { IPaymentClient, ISpendingByService } from "../../domains/report";
 
 const costExplorer = new CostExplorerClient({});
 
@@ -66,7 +66,43 @@ const getForecast = async (to: Date): Promise<number | undefined> => {
   }
 };
 
+const getSpendingByService = async (
+  from: Date,
+  to: Date,
+): Promise<Array<ISpendingByService>> => {
+  logger.info(
+    `Requesting current cost from ${from} to ${to} grouped by service`,
+  );
+
+  const currentCostAndUsage = await costExplorer.send(
+    new GetCostAndUsageCommand({
+      Granularity: "MONTHLY",
+      //   https://aws.amazon.com/blogs/aws-cloud-financial-management/understanding-your-aws-cost-datasets-a-cheat-sheet/
+      Metrics: ["UnblendedCost"],
+      TimePeriod: {
+        Start: from.toISOString().split("T")[0],
+        End: to.toISOString().split("T")[0],
+      },
+      GroupBy: [{ Type: "DIMENSION", Key: "SERVICE" }],
+    }),
+  );
+
+  logger.info(
+    `Received response ${JSON.stringify(currentCostAndUsage, null, 2)}`,
+  );
+
+  const costByService = currentCostAndUsage.ResultsByTime?.[0]?.Groups?.map(
+    (service): ISpendingByService => ({
+      amount: service.Metrics?.UnblendedCost?.Amount ?? "-1",
+      service: service.Keys?.join(" ") ?? "unknown",
+    }),
+  );
+
+  return costByService ?? [];
+};
+
 export const costExplorerClient: IPaymentClient = {
   getCurrentSpending,
   getForecast,
+  getSpendingByService,
 };
