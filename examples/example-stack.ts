@@ -13,10 +13,10 @@ const slackWorkspaceId = new CfnParameter(stack, "SlackWorkspaceId", {
 });
 
 new SlackCostReporter(stack, "SlackCostReporter", {
+  enableServiceLevelReports: true,
   organizationIdentifier: "Netlight AFT",
   schedule: Schedule.cron({
-    minute: "0",
-    hour: "*",
+    minute: "*",
   }),
   slackChannelId: slackChannelId.valueAsString,
   slackWorkspaceId: slackWorkspaceId.valueAsString,

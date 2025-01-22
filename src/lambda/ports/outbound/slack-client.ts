@@ -9,12 +9,10 @@ const logger = new Logger({ serviceName: "slack-client" });
 const notify = (topicArn: string) => {
   return async ({
     title,
-    message,
-    currentSpending,
-    forecast,
+    description,
   }: {
     title: string;
-    message: string;
+    description: string;
     currentSpending: number;
     forecast: number;
   }): Promise<void> => {
@@ -27,10 +25,7 @@ const notify = (topicArn: string) => {
           content: {
             textType: "client-markdown",
             title,
-            description: `
-                    :warning: ${message}
-                    * *Current Cost* ${currentSpending}
-                    * *Forecast* ${forecast}`,
+            description,
           },
         }),
       }),
