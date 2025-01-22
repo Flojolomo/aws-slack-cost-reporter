@@ -25,7 +25,16 @@ export class Report {
     private readonly paymentClient: PaymentClient,
   ) {}
 
-  public async generate(): Promise<void> {
+  public async send(): Promise<void> {
+    await this.generate();
+    await this.notificationClient.notify({
+      from: this.from,
+      to: this.to,
+      ...this.forecast,
+    });
+  }
+
+  private async generate(): Promise<void> {
     this.forecast = {
       currentSpending: await this.paymentClient.getCurrentSpending(
         this.from,
@@ -33,13 +42,7 @@ export class Report {
       ),
       forecast: await this.paymentClient.getForecast(this.to),
     };
-  }
 
-  public async send(): Promise<void> {
-    await this.notificationClient.notify({
-      from: this.from,
-      to: this.to,
-      ...this.forecast,
-    });
+    await this.send();
   }
 }
